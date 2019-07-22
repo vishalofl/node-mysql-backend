@@ -1,5 +1,4 @@
 const express       = require('express');
-const mysql      	= require('mysql');
 const morgan        = require('morgan');
 const cookieParser  = require('cookie-parser');
 const cors 			= require('cors');
