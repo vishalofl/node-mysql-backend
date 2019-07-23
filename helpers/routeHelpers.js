@@ -29,9 +29,9 @@ module.exports = {
             email:Joi.string().email().required(),
             password: Joi.string().required()
         }),
-        mySchema: Joi.object().keys({
-            email:Joi.string().email().required(),
-            password: Joi.string().required()
+        
+        catSchema: Joi.object().keys({
+            cat_name:Joi.string().required()
         })
     }
 }

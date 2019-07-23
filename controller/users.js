@@ -12,16 +12,16 @@ signToken = (user) => {
         iat: new Date().getTime(), // current time
         exp: new Date().setDate(new Date().getDate() + 1) // current time + 1 day ahead
     }, process.env.JWT_SECRET);
-
 }
-
 
 module.exports = {
 
     signUp: async(req,res,next)=> {
         try {
 
-            let foundUser = await User.checkDuplicateUser(req.body.email);
+            let foundUser = await User.checkDuplicateUser(req.body.email).then((users)=>{
+                return users;
+            }).catch(err => console.log(err));
 
             if (foundUser > 0) {
                 return res.status(403).json({ error: 'Email is already in use'});
@@ -38,35 +38,44 @@ module.exports = {
                     if (err) throw err;
                     newUser.password = hash;
 
-                    let userData = User.insertUser(newUser);
-                    
-                    console.log(userData);
-                    res.json(userData);
+                    User.insertUser(newUser).then((user) => {
+                        const token = signToken(user);
 
+                        // Send a cookie containing JWT
+                        res.cookie('access_token', token, {
+                            httpOnly: true
+                        });
 
-                    // const token = signToken(userData);
-                    // // Send a cookie containing JWT
-                    // res.status(200).json({
-                    //     success: true,
-                    //     token:token
-                    // });
+                        res.status(200).json({
+                            success: true,
+                            token:token
+                        });
 
+                    }).catch((err) =>{
+                        console.log(err);
+                    }); ;
                 })
             })
 
-
-
         } catch (e) {
             console.log(e);
-
             res.sendStatus(500);
         }
     },
     signIn: async(req,res,next)=> {
         try {
+            
+            // console.log(req.user[0]['id']);
+            const token = signToken({insertId:req.user[0]['id']});
 
-            let results = await User.getSingleUsers(req.params.id);
-            res.json(results);
+            res.cookie('access_token', token, {
+                httpOnly: true
+            });
+
+            res.status(200).json({ 
+                success: true, 
+                token:token
+            });
 
         } catch (e) {
             console.log(e);
@@ -77,21 +86,23 @@ module.exports = {
     signOut: async(req,res,next)=> {
         try {
 
-            let results = await User.getSingleUsers(req.params.id);
-            res.json(results);
+            res.clearCookie('access_token');
+            return res.status(200).json({ 
+                msg: 'sign out success'
+            });
 
         } catch (e) {
             console.log(e);
-
             res.sendStatus(500);
         }
     },
     dashboard: async(req,res,next)=> {
         try {
-
+            // console.log(req.user);
             res.json("dashboard is called");
 
         } catch (e) {
+            
             console.log(e);
             res.sendStatus(500);
         }
