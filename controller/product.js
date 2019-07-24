@@ -1,58 +1,70 @@
+const multer = require('multer');
 
 const Product = require('../models/product');
 
 require('dotenv').config();
+
+/*image upload*/
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'uploads/')
+    },
+    filename: function (req, file, cb) {
+        cb(null, Date.now() + file.originalname)
+    }
+})
+
+const limits = {
+
+  fileSize: 1024 * 1024 * 3
+
+};
+
+const fileFilter = function(req, file, cb) {
+
+    if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/)) {
+        return cb({message: "Only image files are allowed!"}, false);
+    }
+    cb(null, true);
+};
+
+const upload = multer({
+    storage: storage,
+    limits: limits,
+    fileFilter: fileFilter
+});
+
+const productUpload = upload.single('productimg');
 
 module.exports = {
 
     addProduct: async(req,res,next)=> {
         try {
 
-            const newProduct = {
-                pro_name:req.body.name,
-                pro_price:req.body.price,
-                pro_photo:req.file.filename,
-            }
+            productUpload(req, res, function (err) {
 
-             console.log(newProduct);
+                if (err) {
+                    return res.status(403).json({ error: err});
+                } 
 
-            Product.insertProduct(newProduct).then((product) => {
+                // Everything went fine.
+                const newProduct = {
+                    pro_name:req.body.name,
+                    pro_price:req.body.price,
+                    pro_photo:req.file.filename,
+                }
 
-                res.status(200).json({
-                    success: true,
-                    product:product
+                Product.insertProduct(newProduct).then((product) => {
+
+                    res.status(200).json({
+                        success: true,
+                        product:product
+                    });
+
+                }).catch((err) =>{
+                    console.log(err);
                 });
-
-            }).catch((err) =>{
-                console.log(err);
-            });
-
-           
-
-            // let foundCategory = await Category.checkDuplicateCategory(req.body.cat_name).then((category) => {
-            //     return category;
-            // }).catch(err => console.log(err));
-
-
-            // if (foundCategory > 0) {
-            //     return res.status(403).json({ error: 'Category Name is already in use'});
-            // }
-
-            // const newCategory = {
-            //     cat_name:req.body.cat_name,
-            // }
-
-            // console.log(foundCategory);
-
-            // Category.insertCategory(newCategory).then((category) => {
-
-            //     res.status(200).json({
-            //         success: true
-            //     });
-
-            // }).catch((err) =>{
-            //     console.log(err);
-            // });
+            })
 
         } catch (e) {
             res.sendStatus(500);

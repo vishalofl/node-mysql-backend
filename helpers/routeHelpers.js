@@ -7,10 +7,12 @@ module.exports = {
         return (req,res,next)=> {
 
             const result = Joi.validate(req.body, schema);
-
+            
             if (result.error) {
 
-                return res.status(400).json({error:result.error.details[0]['message']});
+                return res.json({
+                        error:result.error.details[0]['message']
+                    });
             }
 
             if (!req.value) {
@@ -19,13 +21,15 @@ module.exports = {
             }
             
             req.value['body'] = result.value;
+
             next();
         }
     },
 
     schemas:{
         authSchema: Joi.object().keys({
-            name:Joi.string().required(),
+            firstname:Joi.string().required(),
+            lastname:Joi.string(),
             email:Joi.string().email().required(),
             password: Joi.string().required()
         }),

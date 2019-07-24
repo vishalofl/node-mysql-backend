@@ -19,12 +19,14 @@ module.exports = {
     signUp: async(req,res,next)=> {
         try {
 
+            // console.log(req.body);
+
             let foundUser = await User.checkDuplicateUser(req.body.email).then((users)=>{
                 return users;
             }).catch(err => console.log(err));
 
             if (foundUser > 0) {
-                return res.status(403).json({ error: 'Email is already in use'});
+                return res.json({ error: 'Email is already in use'});
             }
 
             const newUser = {

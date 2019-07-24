@@ -11,18 +11,7 @@ const { isAuth, isAdmin } = require('../auth/auth');
 
 //Login page
 
-const multer = require('multer');
-
-const storage = multer.diskStorage({
-	destination : function(req,file,cb){
-		cb(null, 'uploads/')
-	}
-});
-
-const upload = multer({ storage: storage });
-
-
-router.post('/add-new', upload.single('product_img'), productController.addProduct);
+router.post('/add-new', productController.addProduct);
 router.get('/dashboard', passportJWT, isAdmin, productController.dashboard);
 
 module.exports = router;
