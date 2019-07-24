@@ -9,7 +9,7 @@ const productController = require('../controller/product');
 const passportJWT = passport.authenticate('jwt', { session: false });
 const { isAuth, isAdmin } = require('../auth/auth');
 
-//Login page
+//product page
 
 router.post('/add-new', productController.addProduct);
 router.get('/dashboard', passportJWT, isAdmin, productController.dashboard);
