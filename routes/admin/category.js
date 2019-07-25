@@ -3,11 +3,11 @@ const router = express.Router();
 // const User = require('../model/User');
 // const bcrypt = require('bcryptjs');
 const passport = require('passport');
-const { validateBody, schemas } = require('../helpers/routeHelpers');
-const categoryController = require('../controller/category');
+const { validateBody, schemas } = require('../../helpers/routeHelpers');
+const categoryController = require('../../controller/admin/category');
 
 const passportJWT = passport.authenticate('jwt', { session: false });
-const { isAuth, isAdmin } = require('../auth/auth');
+const { isAuth, isAdmin } = require('../../auth/auth');
 
 //Login page
 

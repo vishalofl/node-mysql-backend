@@ -1,12 +1,12 @@
-const pool = require('../db');
+const pool = require('../../db');
 
 module.exports = {
 
-    insertProduct: (postData) => {
+    insertCategory: (postData) => {
 
         return new Promise((resolve,reject) => {
 
-        	pool.query("INSERT INTO product_master SET ?", postData ,(err,results) => {
+        	pool.query("INSERT INTO category_master SET ?", postData ,(err,results) => {
 
         		if (err) {
         			return reject(err);
@@ -17,7 +17,7 @@ module.exports = {
 
         })
     },
-    checkDuplicateProduct: (cat_name) => {
+    checkDuplicateCategory: (cat_name) => {
         
         return new Promise((resolve,reject) => {
             

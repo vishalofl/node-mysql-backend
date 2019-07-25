@@ -1,6 +1,6 @@
 const multer = require('multer');
 
-const Product = require('../models/product');
+const Product = require('../../models/admin/product');
 
 require('dotenv').config();
 

@@ -6,12 +6,15 @@ module.exports = {
 
         return (req,res,next)=> {
 
-            const result = Joi.validate(req.body, schema);
+            const result = Joi.validate(req.body, schema, {allowUnknown: true , abortEarly: false});
             
             if (result.error) {
 
+                const errorString = result.error.details[0]['message'];
+                const errorMsg = errorString.replace(/[^a-z\d\s]+/gi, "");
+
                 return res.json({
-                        error:result.error.details[0]['message']
+                        error:errorMsg
                     });
             }
 
@@ -27,11 +30,10 @@ module.exports = {
     },
 
     schemas:{
-        authSchema: Joi.object().keys({
-            firstname:Joi.string().required(),
-            lastname:Joi.string(),
-            email:Joi.string().email().required(),
-            password: Joi.string().required()
+        registerSchema: Joi.object().keys({
+            firstname:Joi.string().required().label("First Name"),
+            email:Joi.string().email().required().label("Email"),
+            password: Joi.string().min(3).max(10).required().label("Password"),
         }),
         
         catSchema: Joi.object().keys({

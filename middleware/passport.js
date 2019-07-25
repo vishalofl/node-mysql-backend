@@ -8,7 +8,7 @@ const LocalStrategy = require('passport-local').Strategy;
 
 const bcrypt = require('bcryptjs');
 // Load User model
-const User = require('../models/users');
+const User = require('../models/client/users');
 require('dotenv').config();
 
 const cookieExtractor = req => {
