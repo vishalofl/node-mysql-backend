@@ -19,13 +19,13 @@ module.exports = {
     signUp: async(req,res,next)=> {
         try {
 
-            // console.log(req.body);
-
             let foundUser = await User.checkDuplicateUser(req.body.email).then((users)=>{
                 return users;
             }).catch(err => console.log(err));
 
             if (foundUser > 0) {
+
+                res.setHeader('Content-Type', 'application/json');
                 return res.json({ error: 'Email is already in use'});
             }
 
@@ -48,9 +48,11 @@ module.exports = {
                             httpOnly: true
                         });
 
+                        res.setHeader('Content-Type', 'application/json');
                         res.status(200).json({
                             success: true,
-                            token:token
+                            token:token,
+                            message:"user created successfully!"
                         });
 
                     }).catch((err) =>{
@@ -66,22 +68,21 @@ module.exports = {
     },
     signIn: async(req,res,next)=> {
         try {
-            
             // console.log(req.user[0]['id']);
+            
             const token = signToken({insertId:req.user[0]['id']});
 
             res.cookie('access_token', token, {
                 httpOnly: true
             });
 
+            res.setHeader('Content-Type', 'application/json');
             res.status(200).json({ 
                 success: true, 
-                token:token
+                token:token,
             });
 
         } catch (e) {
-            console.log(e);
-
             res.sendStatus(500);
         }
     },
@@ -89,8 +90,9 @@ module.exports = {
         try {
 
             res.clearCookie('access_token');
+            res.setHeader('Content-Type', 'application/json');
             return res.status(200).json({ 
-                msg: 'sign out success'
+                message: 'sign out success'
             });
 
         } catch (e) {

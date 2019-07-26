@@ -14,7 +14,7 @@ const { isAuth, isAdmin } = require('../../auth/auth');
 //Login page
 
 router.post('/signup', validateBody(schemas.registerSchema), userController.signUp);
-router.post('/signin', passportSignIn, isAuth ,userController.signIn);
+router.post('/signin', validateBody(schemas.loginSchema),passportSignIn, userController.signIn);
 router.get('/signout', userController.signOut);
 router.get('/dashboard', passportJWT, isAdmin, userController.dashboard);
 

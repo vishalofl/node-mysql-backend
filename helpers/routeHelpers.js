@@ -6,7 +6,7 @@ module.exports = {
 
         return (req,res,next)=> {
 
-            const result = Joi.validate(req.body, schema, {allowUnknown: true , abortEarly: false});
+            const result = Joi.validate(req.body, schema, {allowUnknown: true });
             
             if (result.error) {
 
@@ -32,6 +32,10 @@ module.exports = {
     schemas:{
         registerSchema: Joi.object().keys({
             firstname:Joi.string().required().label("First Name"),
+            email:Joi.string().email().required().label("Email"),
+            password: Joi.string().min(3).max(10).required().label("Password"),
+        }),
+        loginSchema: Joi.object().keys({
             email:Joi.string().email().required().label("Email"),
             password: Joi.string().min(3).max(10).required().label("Password"),
         }),
