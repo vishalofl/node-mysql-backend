@@ -24,14 +24,12 @@ module.exports = {
             }
             
             req.value['body'] = result.value;
-
             next();
         }
     },
 
     schemas:{
         registerSchema: Joi.object().keys({
-            firstname:Joi.string().required().label("First Name"),
             email:Joi.string().email().required().label("Email"),
             password: Joi.string().min(3).max(10).required().label("Password"),
         }),

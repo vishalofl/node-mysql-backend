@@ -1,13 +1,19 @@
-// Load module
 const mysql = require('mysql');
-// Initialize pool
-const pool      =    mysql.createPool({
-    connectionLimit : 10,
-    host     : 'localhost',
-    user     : 'root',
-    password : 'ggmu',
-    database : 'gromo',
-    debug    :  false
-});   
- 
-module.exports = pool;
+
+const connection = mysql.createConnection({
+	host     : 'localhost',
+  	user     : 'root',
+  	password : '',
+  	database : 'gromo'
+});
+
+try {
+	
+	connection.connect();
+  	console.log('Connected to the MYSQL database');
+
+} catch(e) {
+	console.log('Database Connetion failed:' + e);
+}
+
+module.exports = connection;

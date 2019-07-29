@@ -1,4 +1,4 @@
-const connection = require('../../db/dbconnection');
+const connection = require('../../db/');
 
 module.exports = {
 
@@ -15,6 +15,7 @@ module.exports = {
             connection.query(sql,[sortBy, order, limit], function(err, results, fields) {
 
                 if (err) {
+
                     return reject(err);
                 }
                 resolve(results);
