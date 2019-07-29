@@ -52,6 +52,7 @@ module.exports = {
                     pro_name:req.body.name,
                     pro_price:req.body.price,
                     pro_photo:req.file.filename,
+                    pro_cat_id:req.body.category,
                 }
 
                 Product.insertProduct(newProduct).then((product) => {

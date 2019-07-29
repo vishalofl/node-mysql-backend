@@ -20,11 +20,16 @@ const productRoute = require('./routes/admin/product');
 
 // import client routes
 const userRoute = require('./routes/client/users');
+const userProduct = require('./routes/client/product');
 
-// routes middleware
-app.use('/api', userRoute);
+// admin routes middleware
 app.use('/api/admin/category', categoryRoute);
 app.use('/api/admin/product', productRoute);
+
+// client routes middleware
+app.use('/api', userRoute);
+
+app.use('/api/products', userProduct);
 
 // start server
 const port = process.env.PORT || 8000;

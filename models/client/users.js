@@ -1,4 +1,4 @@
-const pool = require('../../db');
+const connection = require('../../db/dbconnection');
 
 module.exports = {
 
@@ -6,7 +6,7 @@ module.exports = {
 
         return new Promise((resolve,reject) => {
 
-        	pool.query("INSERT INTO user_master SET ?", postData ,(err,results) => {
+        	connection.query("INSERT INTO user_master SET ?", postData ,(err,results) => {
 
         		if (err) {
         			return reject(err);
@@ -22,7 +22,7 @@ module.exports = {
     	
         return new Promise((resolve,reject) => {
             
-        	pool.query("SELECT id FROM user_master WHERE email = ? ",[email],(err,results) => {
+        	connection.query("SELECT id FROM user_master WHERE email = ? ",[email],(err,results) => {
 
         		if (err) {
         			return reject(err);
@@ -36,7 +36,7 @@ module.exports = {
         
         return new Promise((resolve,reject) => {
             
-            pool.query("SELECT id,role_id,name,email,password FROM user_master WHERE email = ? ",[email],(err,results) => {
+            connection.query("SELECT id,role_id,name,email,password FROM user_master WHERE email = ? ",[email],(err,results) => {
 
                 if (err) {
                     return reject(err);
@@ -50,7 +50,7 @@ module.exports = {
         
         return new Promise((resolve,reject) => {
             
-            pool.query("SELECT id,role_id,name,email,password FROM user_master WHERE id = ? ",[id],(err,results) => {
+            connection.query("SELECT id,role_id,name,email,password FROM user_master WHERE id = ? ",[id],(err,results) => {
 
                 if (err) {
                     return reject(err);

@@ -1,4 +1,5 @@
-const pool = require('../../db');
+const connection = require('../../db/dbconnection');
+
 
 module.exports = {
 
@@ -6,7 +7,7 @@ module.exports = {
 
         return new Promise((resolve,reject) => {
 
-        	pool.query("INSERT INTO category_master SET ?", postData ,(err,results) => {
+        	connection.query("INSERT INTO category_master SET ?", postData ,(err,results) => {
 
         		if (err) {
         			return reject(err);
@@ -21,7 +22,7 @@ module.exports = {
         
         return new Promise((resolve,reject) => {
             
-            pool.query("SELECT cat_id FROM category_master WHERE cat_name = ? ",[cat_name],(err,results) => {
+            connection.query("SELECT cat_id FROM category_master WHERE cat_name = ? ",[cat_name],(err,results) => {
 
                 if (err) {
                     return reject(err);
