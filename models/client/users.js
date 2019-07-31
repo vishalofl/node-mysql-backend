@@ -62,5 +62,22 @@ module.exports = {
             })
 
         })
+    },
+
+    findByGooleId: (id) => {
+        
+        return new Promise((resolve,reject) => {
+            
+            connection.query("SELECT id,first_name,last_name,email,password FROM ol_client_master WHERE google_id = ? ",[id],(err,results) => {
+
+                if (err) {
+                    return reject(err);
+                }
+
+                return resolve(results);
+            })
+
+        })
     }
+
 }

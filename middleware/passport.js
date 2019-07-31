@@ -6,6 +6,8 @@ const { ExtractJwt } = require('passport-jwt');
 // Local Strategy
 const LocalStrategy = require('passport-local').Strategy;
 
+const googlePlusTokenStrategy = require('passport-google-plus-token');
+
 const bcrypt = require('bcryptjs');
 // Load User model
 const User = require('../models/client/users');
@@ -18,6 +20,49 @@ const cookieExtractor = req => {
   }
   return token;
 }
+
+console.log(process.env.GOOGLE_CLIENT_ID)
+
+// JSON GOOGLE OAUTH TOKENS STRATEGY
+passport.use('googleToken', new googlePlusTokenStrategy({
+    clientID: process.env.GOOGLE_CLIENT_ID,
+    clientSecret: process.env.GOOGLE_CLIENT_SECRET
+}, async (accessToken, refreshToken, profile, done) => {
+    
+    try {
+
+        const existingUser = await User.findByGooleId(profile.id)
+        
+        if (parseInt(existingUser.length) != 0) {
+            return done(null, existingUser);
+        }
+
+        const newUser = {
+            method:'google',
+            first_name:profile.name.givenName,
+            last_name:profile.name.familyName,
+            email:profile.emails[0].value,
+            google_id:profile.id
+        }
+
+        await User.insertUser(newUser).then((user) => {
+           return done(null, user);
+        }).catch((err) => {
+            console.log(err);
+        });
+
+    } catch(error) {
+        done(error, false,error.message);
+    }
+
+
+   
+
+
+}));
+
+
+
 
 
 // JSON WEB TOKENS STRATEGY

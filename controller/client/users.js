@@ -30,6 +30,7 @@ module.exports = {
             }
 
             const newUser = {
+                method:'local',
                 email:req.body.email,
                 password:req.body.password
             }
@@ -76,6 +77,31 @@ module.exports = {
             });
 
             res.setHeader('Content-Type', 'application/json');
+            res.status(200).json({ 
+                success: true, 
+                token:token,
+            });
+
+        } catch (e) {
+            res.sendStatus(500);
+        }
+    },
+    googleSignIn: async(req,res,next)=> {
+        try {
+            
+            console.log(req.user);
+
+            if (!req.user.insertId) 
+            {
+                var user_id = req.user[0]['id'];
+            }
+            else
+            {
+                var user_id = req.user.insertId;
+            }
+
+            const token = signToken({insertId:user_id});
+
             res.status(200).json({ 
                 success: true, 
                 token:token,
